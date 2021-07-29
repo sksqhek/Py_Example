@@ -1,0 +1,21 @@
+#This is datafile
+#Countries
+France
+Denmark
+Canada
+New Zealand
+Malaysia
+South Africa
+South Korea
+China
+Iceland
+#Cities
+Paris
+Copenhagen
+Ottawa
+Wellington
+Kuala Lumpur
+Cape Town
+Seoul
+Beijing
+Reykjavik

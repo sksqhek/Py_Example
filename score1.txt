@@ -1,0 +1,7 @@
+# Name Homework Midterm Final
+Emma 20 17 35
+Bryan 19 25 34 
+Olivia 18 23 38
+Chris 17 29 37
+Louis 19 30 31
+Sophia 18 19 29
