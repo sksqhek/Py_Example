@@ -84,6 +84,8 @@ class Game:
 
     game_status = "homeGame"
 
+    gold = 0
+
     def initGame(self):
         self.img_1 = pygame.image.load('explode.png')
         self.img_player = pygame.image.load("player.png")
@@ -141,6 +143,28 @@ class Game:
         self.plane3000 = Item(pygame.image.load('3000.png'), 2)
         self.plane4000 = Item(pygame.image.load('4000.png'), 2)
 
+        self.loadGold()
+
+    def loadGold(self):
+        try:
+            fp = open("gold.txt", "r")
+
+            self.gold = int(fp.readline())
+
+            fp.close()
+        except:
+            pass
+
+    def saveGold(self):
+        try:
+            fp = open("gold.txt", "w")
+
+            fp.write(str(int(self.gold)))
+
+            fp.close()
+        except:
+            pass
+
     def drawText(self, text, pos, color):
         text = font1.render(text, True, color)  # 텍스트가 표시된 Surface 를 만듬
         screen.blit(text, pos)  # 화면에 표시
@@ -171,40 +195,44 @@ class Game:
         self.plane4000.rect.top = 200
 
         while True:
-            money = (self.score / 20) * 100
-            gold = "골드:{0}원".format(int(money))
+            #money = (self.score / 20) * 100
+            self.loadGold()
+            gold_text = "골드:{0}원".format(self.gold)
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:  # 키를 누루면
                     if event.key == pygame.K_y:
                         self.game_status = "homeGame"
-                        self.score = money * 20 / 100
                         return
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # 좌클릭 감지
                     if game_2000.rect.collidepoint(event.pos):
-                        if money < 2000:
+                        if self.gold < 2000:
                             break
-                        money -= 2000
+                        self.gold -= 2000
                         self.player.changePlane(self.plane2000.image)
+                        self.saveGold()
 
                     elif game_3000.rect.collidepoint(event.pos):
-                        if money < 3000:
+                        if self.gold < 3000:
                             break
-                        money -= 3000
+                        self.gold -= 3000
                         self.player.changePlane(self.plane3000.image)
+                        self.saveGold()
 
                     elif game_4000.rect.collidepoint(event.pos):
-                        if money < 4000:
+                        if self.gold < 4000:
                             break
-                        money -= 4000
+                        self.gold -= 4000
                         self.player.changePlane(self.plane4000.image)
+                        self.saveGold()
+
                     elif prev_btn.rect.collidepoint(event.pos):
                         self.game_status = "homeGame"
-                        self.score = money * 20 / 100
                         return
+
 
             screen.fill((0, 0, 0))
 
-            self.drawText(gold, (20,10), (255, 255, 255))
+            self.drawText(gold_text, (20,10), (255, 255, 255))
 
             self.drawText("2000원", (100, 100), (255, 255, 255))
             self.drawText("3000원", (300, 100), (255, 255, 255))
@@ -236,9 +264,10 @@ class Game:
 
             screen.fill((0, 0, 0))
 
-            money = (self.score / 20) * 100
-            gold = "골드:{0}원".format(int(money))
-            self.drawText(gold, (20, 10), (255, 255, 255))
+            #money = (self.score / 20) * 100
+            self.loadGold()
+            gold_text = "골드:{0}원".format(self.gold)
+            self.drawText(gold_text, (20, 10), (255, 255, 255))
 
             game_start.draw()
             game_shop.draw()
@@ -450,6 +479,8 @@ class Game:
                 self.explodes.append(Explode(self.img_explode, self.player.rect.left, self.player.rect.top))
                 self.sounds[6].play()#exp2.wav파일 플레이
                 self.gameover = True
+                self.gold += (self.score / 20) * 100
+                self.saveGold()
 
             screen.fill((0, 0, 0))
             

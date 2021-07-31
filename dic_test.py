@@ -2,7 +2,7 @@ import re
 import string
 
 frequency = {}
-document_text = open('Test.py', 'rt', encoding='UTF8')
+document_text = open('a_star.py', 'rt', encoding='UTF8')
 text_string = document_text.read().lower()
 mach_pattern=re.findall(r'\b[a-z]{3,15}\b', text_string)
 
