@@ -23,7 +23,7 @@ def fire():
         t.color("blue")
         t.write("Good!", False, "center", ("", 15))
     else:#25보다 크다면면
-       t.color("red")
+        t.color("red")
         t.write("Bad!", False, "center", ("", 15))
 
     #발사위치로 이동

@@ -54,7 +54,7 @@ def main():
             if event.type == pygame.QUIT:
                 # change the value to False, to exit the main loop
                 running = False
-    
+
     
 # run the main function only if this module is executed as the main script
 # (if you import this as a module then nothing is executed)

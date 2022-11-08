@@ -5,12 +5,12 @@ from struct import pack
 
 def record(outputFile):
     CHUNK = 1024
-   FORMAT = pyaudio.paInt16
+    FORMAT = pyaudio.paInt16
     CHANNELS = 2
-   RATE = 44100
-   RECORD_SECONDS = 10
+    RATE = 44100
+    RECORD_SECONDS = 10
 
-   p = pyaudio.PyAudio()
+    p = pyaudio.PyAudio()
     stream = p.open(format=FORMAT,
                     channels=CHANNELS,
                     rate=RATE,

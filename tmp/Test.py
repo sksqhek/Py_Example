@@ -86,6 +86,8 @@ class Game:
 
     gold = 0
 
+    inventory = []
+
     def initGame(self):
         self.img_1 = pygame.image.load('explode.png')
         self.img_player = pygame.image.load("player.png")
@@ -127,6 +129,9 @@ class Game:
                      pygame.mixer.Sound('exp2.wav')]
         self.sound_shot = pygame.mixer.Sound('shot.wav')
 
+        #pygame.mixer.music.load('pygamemusic.mp3')
+        #pygame.mixer.music.play(-1)
+
         #파일에서 이름 로딩
         fp = open('name.txt','r')
         str = fp.read()
@@ -139,9 +144,15 @@ class Game:
 
         self.img_player_power_bullet = pygame.image.load("fire3.png")
 
+        self.plane0 = Item(pygame.image.load('0.png'), 2)
         self.plane2000 = Item(pygame.image.load('2000.png'), 2)
         self.plane3000 = Item(pygame.image.load('3000.png'), 2)
         self.plane4000 = Item(pygame.image.load('4000.png'), 2)
+
+        self.game_0 = Button(screen, (50, 300), (100, 50), "선택")
+        self.game_2000 = Button(screen, (250, 300), (100, 50), "구입")
+        self.game_3000 = Button(screen, (450, 300), (100, 50), "구입")
+        self.game_4000 = Button(screen, (650, 300), (100, 50), "구입")
 
         self.loadGold()
 
@@ -149,7 +160,13 @@ class Game:
         try:
             fp = open("gold.txt", "r")
 
-            self.gold = int(fp.readline())
+            self.gold = int(fp.readline().strip())
+
+            line = fp.readline().strip()
+            if len(line) > 1:
+                self.game_2000.text = line
+                self.game_3000.text = fp.readline().strip()
+                self.game_4000.text = fp.readline().strip()
 
             fp.close()
         except:
@@ -159,14 +176,19 @@ class Game:
         try:
             fp = open("gold.txt", "w")
 
-            fp.write(str(int(self.gold)))
+            fp.write(str(int(self.gold))+"\n")
+            fp.write(self.game_2000.text+"\n")
+            fp.write(self.game_3000.text+"\n")
+            fp.write(self.game_4000.text+"\n")
+
 
             fp.close()
         except:
             pass
 
-    def drawText(self, text, pos, color):
-        text = font1.render(text, True, color)  # 텍스트가 표시된 Surface 를 만듬
+    def drawText(self, text, pos, color, size):
+        my_font = pygame.font.Font('TaeFont TSTJktB.ttf', size)  # 폰트 설정
+        text = my_font.render(text, True, color)  # 텍스트가 표시된 Surface 를 만듬
         screen.blit(text, pos)  # 화면에 표시
 
     def run(self):
@@ -181,17 +203,16 @@ class Game:
                 self.runGame()
 
     def shopGame(self):
-        game_2000 = Button(screen, (100, 300), (100, 50), "구입")
-        game_3000 = Button(screen, (300, 300), (100, 50), "구입")
-        game_4000 = Button(screen, (500, 300), (100, 50), "구입")
 
         prev_btn = Button(screen, (10, 500), (100, 50), "이전")
 
-        self.plane2000.rect.left = 100
+        self.plane0.rect.left = 50
+        self.plane0.rect.top = 200
+        self.plane2000.rect.left = 250
         self.plane2000.rect.top = 200
-        self.plane3000.rect.left = 300
+        self.plane3000.rect.left = 450
         self.plane3000.rect.top = 200
-        self.plane4000.rect.left = 500
+        self.plane4000.rect.left = 650
         self.plane4000.rect.top = 200
 
         while True:
@@ -204,26 +225,44 @@ class Game:
                         self.game_status = "homeGame"
                         return
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # 좌클릭 감지
-                    if game_2000.rect.collidepoint(event.pos):
+                    if self.game_2000.rect.collidepoint(event.pos):
+                        if self.game_2000.text == "선택":
+                            self.player.changePlane(self.plane2000.image)
+                            break
+
                         if self.gold < 2000:
                             break
                         self.gold -= 2000
                         self.player.changePlane(self.plane2000.image)
+                        self.game_2000.text = "선택"
                         self.saveGold()
 
-                    elif game_3000.rect.collidepoint(event.pos):
+                    elif self.game_3000.rect.collidepoint(event.pos):
+                        if self.game_3000.text == "선택":
+                            self.player.changePlane(self.plane3000.image)
+                            break
+
                         if self.gold < 3000:
                             break
                         self.gold -= 3000
                         self.player.changePlane(self.plane3000.image)
+                        self.game_3000.text = "선택"
                         self.saveGold()
 
-                    elif game_4000.rect.collidepoint(event.pos):
+                    elif self.game_4000.rect.collidepoint(event.pos):
+                        if self.game_4000.text == "선택":
+                            self.player.changePlane(self.plane4000.image)
+                            break
+
                         if self.gold < 4000:
                             break
                         self.gold -= 4000
                         self.player.changePlane(self.plane4000.image)
+                        self.game_4000.text = "선택"
                         self.saveGold()
+
+                    elif self.game_0.rect.collidepoint(event.pos):
+                        self.player.changePlane(self.plane0.image)
 
                     elif prev_btn.rect.collidepoint(event.pos):
                         self.game_status = "homeGame"
@@ -232,17 +271,22 @@ class Game:
 
             screen.fill((0, 0, 0))
 
-            self.drawText(gold_text, (20,10), (255, 255, 255))
+            self.drawText(gold_text, (20,10), (255, 255, 255), 50)
 
-            self.drawText("2000원", (100, 100), (255, 255, 255))
-            self.drawText("3000원", (300, 100), (255, 255, 255))
-            self.drawText("4000원", (500, 100), (255, 255, 255))
+            self.drawText("기본", (50, 100), (255, 255, 255), 40)
+            self.drawText("2000원", (250, 100), (255, 255, 255),40)
+            self.drawText("3000원", (450, 100), (255, 255, 255),40)
+            self.drawText("4000원", (650, 100), (255, 255, 255),40)
+
+            self.plane0.draw()
             self.plane2000.draw()
             self.plane3000.draw()
             self.plane4000.draw()
-            game_2000.draw()
-            game_3000.draw()
-            game_4000.draw()
+
+            self.game_0.draw()
+            self.game_2000.draw()
+            self.game_3000.draw()
+            self.game_4000.draw()
 
             prev_btn.draw()
 
@@ -267,7 +311,7 @@ class Game:
             #money = (self.score / 20) * 100
             self.loadGold()
             gold_text = "골드:{0}원".format(self.gold)
-            self.drawText(gold_text, (20, 10), (255, 255, 255))
+            self.drawText(gold_text, (20, 10), (255, 255, 255),50)
 
             game_start.draw()
             game_shop.draw()
@@ -287,12 +331,10 @@ class Game:
             screen.blit(img_start, img_start.get_rect())
 
             # 설명서 출력
-            text = font1.render(descripts[0], True, (255, 64, 190))  # 텍스트가 표시된 Surface 를 만듬
-            screen.blit(text, (200, 10))  # 화면에 표시
+            self.drawText(descripts[0], (200, 10), (255, 64, 190), 50)
 
             for i in range(1, len(descripts)):
-                text = font2.render(descripts[i], True, (190, 190, 190))  # 텍스트가 표시된 Surface 를 만듬
-                screen.blit(text, (50, 250 + (i * 40)))  # 화면에 표시
+                self.drawText(descripts[i], (50, 250 + (i * 40)), (190, 190, 190), 18)
 
             pygame.display.update()
         # 처음 화면 부분 끝
@@ -595,8 +637,14 @@ class Button:
         self.text = text
     def draw(self):
         pygame.draw.rect(self.screen, (255,255,255), self.rect)
-        text = font1.render(self.text, True, (0, 0, 0))  # 텍스트가 표시된 Surface 를 만듬
-        screen.blit(text, self.rect)  # 화면에 표시
+
+        self.drawText(self.text, self.rect, (0, 0, 0), 50)
+
+
+    def drawText(self, text, pos, color, size):
+        my_font = pygame.font.Font('TaeFont TSTJktB.ttf', size)  # 폰트 설정
+        text = my_font.render(text, True, color)  # 텍스트가 표시된 Surface 를 만듬
+        screen.blit(text, pos)  # 화면에 표시
 
 class Item(pygame.sprite.Sprite):#heal
     def __init__(self, img_heal, scale = 1):
@@ -637,6 +685,8 @@ class Player(pygame.sprite.Sprite):
 
     def changePlane(self, img_player):
         self.image = img_player
+        self.rect.width = self.image.get_rect().width
+        self.rect.height = self.image.get_rect().height
 
     def update(self, df):
         if pygame.key.get_pressed()[self.key_left]:
@@ -784,9 +834,6 @@ descripts = []
 
 for li in fp:
     descripts.append(li.strip())
-
-font1 = pygame.font.Font('TaeFont TSTJktB.ttf', 50)  # 폰트 설정
-font2 = pygame.font.Font('TaeFont TSTJktB.ttf', 18)  # 폰트 설정
 
 game = Game()
 game.initGame()

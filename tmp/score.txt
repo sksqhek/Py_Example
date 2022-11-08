@@ -1,10 +1,13 @@
+asdads 1930
 sdffs 1540
 jan 1410
 sarah 1200
 JAN 1090
 sdfsf 1040
 111 1040
+w 1040
 sdfsdf 1000
+sdf 810
 JAN 550
 sdf 520
 sdf 520
@@ -14,5 +17,8 @@ sarah 390
 sarah 140
 sarah 0
 xxx 0
+asd 0
+1 -10
 asdasd -50
+2 -50
 qe -60
