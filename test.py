@@ -1,50 +1,27 @@
-class Graph():
-    def __init__(self,size):
-        self.SIZE = size
-        self.graph = [[0 for _ in range(size)] for _ in range(size)]
+heroes = [ "아이언맨", "캡틴아메리카", "블랙위도우", "닥터스트레인지" ]
+print("1) 최초 리스트:", heroes)
 
-##전역 변수 선언 부분##
-G1 = None
-stack = []
-visitedAry= []
+print("2) 2번 인데스 값 추출:", heroes[2])
 
-##메인 코드 부분##
-G1 = Graph(4)
-G1.graph[0][2] = 1
-G1.graph[0][3]=1
-G1.graph[1][2] = 1
-G1.graph[2][0]=1
-G1.graph[2][1]=1
-G1.graph[2][3] =1
-G1.graph[3][0]=1
-G1.graph[3][2]=1
+heroes[3] = "토르"
+print("3) 3번 인데스 값을 토르로 변경:", heroes)
 
-print('## G1 무방향 그래프 ##')
-for row in range(4):
-    for col in range(4):
-        print(G1.graph[row][col],end='')
-    print()
 
-current = 0  #시작 정점
-stack.append(current)
-visitedAry.append(current)
+heroes.insert(4, "블랙팬서")
+print("4) 4번 인데스에 블랙팬서 삽입:", heroes)
 
-while(len(stack)!=0):
-    next = None
-    for vertex in range(4):
-        if G1.graph[current][vertex]==1:
-            if vertex in visitedAry :
-                pass
-            else :
-                next = vertex
-                break
-    if next != None :
-        current = next
-        stack.append(current)
-        visitedAry.append(current)
-    else:  #다음에 방문할 정점이 없는 경
-        current = stack.pop()
+heroes.append("타노스")
+print("5) 타노스 추가:", heroes)
 
-print ('방문 순서-->',end='')
-for i in visitedAry:
-    print(chr(ord('A')+i),end='')
+heroes.remove("타노스")
+print("6) 타노스 삭제:", heroes)
+
+print("7) 전체 항목의 개수:", len(heroes))
+
+sort_heroes = sorted(heroes)
+print("8) 오름차순 정렬:", sort_heroes)
+
+for h in heroes:
+    print(h)
+
+
